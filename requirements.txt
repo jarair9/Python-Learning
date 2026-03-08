@@ -1,0 +1,17 @@
+requests
+langchain-mistralai
+langchain-core
+langchain-community
+mistralai
+openai
+pygame
+speechrecognition
+edge-tts
+vosk
+playsound
+playgrounds
+python-dotenv
+
+
+# like bolt.new i want it to be very intelligent for tool calls create more tools that powerful agent should have like cmd commands runings, list files,dir,reading ,writing,editing error tracking in code , replacesing code or replace tool search tool etc all tools also make the chat response like real AI agent like for every step AI do tell and and explain why he is going like real dev. make it to understand full stack developer and make it ast as also it has website preveiw issues solve it https://developer.stackblitz.com/platform/api/javascript-sdk
+
