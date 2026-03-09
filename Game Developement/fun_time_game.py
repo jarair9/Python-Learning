@@ -1,10 +1,6 @@
 import pygame
-import random
-import sys
-# self.ball.bottom == self.paddle.top:
-# The gravity formula is: velocity += gravity and position += velocity
 pygame.init()
-# shoot_sound = pygame.mixer.Sound("PYGAME/graphics/breaked.wav")
+
 class Blocks:
     def __init__(self):
         self.W = 70
@@ -28,40 +24,43 @@ class Blocks:
         for rects in self.blocks:
             pygame.draw.rect(screen, "red", rects)
 
+
 class BallANDPADDLE:
     def __init__(self):
         self.ball_radius = 10
         self.w = 90
         self.h = 20
-        self.peddle_rect = pygame.Rect(300,470,self.w,self.h) 
-        self.ball_rect = pygame.Rect(300, 300, self.ball_radius*2, self.ball_radius*2)
-        self.velocity_x = 0  
-        self.velocity_y  = 0     
-        
+        self.peddle_rect = pygame.Rect(300, 470, self.w, self.h)
+        self.ball_rect = pygame.Rect(300, 300, self.ball_radius * 2, self.ball_radius * 2)
+        self.velocity_x = 3   # ✅ give starting sideways speed
+        self.velocity_y = -5  # ✅ negative means going UP at start
 
-    def ball(self):
-        # constant Value
-        self.gravity = 0.5                
-       
-        self.ball_rect.y += self.velocity_y  # velocity Y for rising and falling
-        self.ball_rect.x += self.velocity_x - 1 # velocity x for forward and backward
+    def ball(self, blocks):
+        self.gravity = 0.2
 
-        # Semulation for Gravity 
+        self.ball_rect.y += self.velocity_y
+        self.ball_rect.x += self.velocity_x
+
+        # ✅ gravity only on Y, not X!
         self.velocity_y += self.gravity
-        self.velocity_x += self.gravity
 
-        for rect in b.blocks:
-            if m.ball_rect.colliderect(rect):
-                # shoot_sound.play()
-                b.blocks.remove(rect)
+        # ✅ safe block removal - collect first, remove after
+        blocks_to_remove = []
+        for rect in blocks:
+            if self.ball_rect.colliderect(rect):
+                blocks_to_remove.append(rect)
+                self.velocity_y *= -1  # bounce off block
+
+        for rect in blocks_to_remove:
+            blocks.remove(rect)
+
         pygame.draw.circle(screen, "white", self.ball_rect.center, self.ball_radius)
 
     def peddle(self):
-        pygame.draw.rect(screen,"blue",self.peddle_rect)
+        pygame.draw.rect(screen, "blue", self.peddle_rect)
 
- 
-        
-screen = pygame.display.set_mode((500,500))
+
+screen = pygame.display.set_mode((500, 500))
 clock = pygame.time.Clock()
 
 running = True
@@ -74,32 +73,32 @@ while running:
             running = False
             pygame.quit()
 
-    
-
+    # Paddle collision
     if m.ball_rect.colliderect(m.peddle_rect):
-        m.velocity_y = m.velocity_y * - 1
-        m.ball_rect.y += m.velocity_y  
+        m.velocity_y *= -1
+        m.ball_rect.bottom = m.peddle_rect.top  # ✅ push ball above paddle
 
-    if m.ball_rect.top >=  500:
-        m.velocity_x = m.velocity_x - 0.5
-        m.velocity_y = m.velocity_y * - 1
-        m.ball_rect.y += m.velocity_y 
+    # Top wall
+    if m.ball_rect.top <= 0:
+        m.velocity_y *= -1
+        m.ball_rect.top = 0
 
+    # Left wall
+    if m.ball_rect.left <= 0:
+        m.velocity_x *= -1
+        m.ball_rect.left = 0
 
+    # Right wall
+    if m.ball_rect.right >= 500:
+        m.velocity_x *= -1
+        m.ball_rect.right = 500
 
-
-        
-        
-
-
-     
+    # Game over
     if m.ball_rect.bottom > 500:
         running = False
         pygame.quit()
-   
 
     keys = pygame.key.get_pressed()
-
     if keys[pygame.K_LEFT]:
         m.peddle_rect.x -= 10
     if keys[pygame.K_RIGHT]:
@@ -108,16 +107,14 @@ while running:
     if m.peddle_rect.left < 0:
         m.peddle_rect.left = 0
     if m.peddle_rect.right > 500:
-        m.peddle_rect.right = 500 
-    
-    
+        m.peddle_rect.right = 500
+
     screen.fill("Black")
     b.update()
-    m.ball()
+    m.ball(b.blocks)  # ✅ passing blocks as argument instead of using global b
     m.peddle()
-   
+
     pygame.display.flip()
     clock.tick(60)
 
 pygame.quit()
-

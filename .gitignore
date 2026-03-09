@@ -1,24 +1,13 @@
+# Enviroments
 /.venv
-# Video files
+/__pycache__
+
+# files
+.env
+script.txt
+yt.py
+
+# Media
 *.mp4
 *.mp3
-*.mov
-*.avi
-*.mkv
-*.wmv
-*.flv
-*.webm
-
-# Audio files
-*.mp3
 *.wav
-*.ogg
-*.aac
-*.flac
-*.m4a
-
-.env
-
-# .gitignore
-Python/
-single-file-ai-agent-tutorial/
