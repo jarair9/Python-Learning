@@ -96,9 +96,8 @@ print(size)
 print(random.randint(0,800))
 
 
-x = 50
-for i in x:
-    print(i)
+
+    
 
 # /   → decimal answer
 # //  → whole number answer

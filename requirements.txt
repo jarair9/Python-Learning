@@ -10,5 +10,6 @@ edge-tts
 vosk
 playgrounds
 python-dotenv
+yt_dlp
 
 
