@@ -1,7 +1,4 @@
 requests
-langchain-mistralai
-langchain-core
-langchain-community
 mistralai
 openai
 pygame
@@ -11,5 +8,3 @@ vosk
 playgrounds
 python-dotenv
 yt_dlp
-
-

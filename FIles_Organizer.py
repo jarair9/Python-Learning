@@ -75,8 +75,8 @@ class Filehandler:
                 else:
                     print(f"No matching folder for extension: {ext}")
                     
-#r"C:\Users\Shaheen Alam\Downloads"
-s = Filehandler(r"C:\Users\Shaheen Alam\Downloads")
+
+s = Filehandler(r"")
 s.handler()
         
 

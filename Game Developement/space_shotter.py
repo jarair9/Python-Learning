@@ -3,7 +3,7 @@ from random import randint
 import sys
 
 pygame.init()
-shoot_sound = pygame.mixer.Sound("PYGAME/graphics/hit.wav")
+# shoot_sound = pygame.mixer.Sound("PYGAME/graphics/hit.wav")
 
 class Enemy:
     def __init__(self):
@@ -31,7 +31,7 @@ class Enemy:
         for bullets in bullets:
             for enemy in self.enemies:
                 if bullet.colliderect(enemy):
-                    shoot_sound.play()
+                    # shoot_sound.play()
                     self.count += 1
                     self.enemies.remove(enemy)
 
@@ -41,9 +41,9 @@ pygame.display.set_caption("Space Shooter")
 clock = pygame.time.Clock()
 
 
-player = pygame.image.load("PYGAME/graphics/player.png").convert_alpha()
+player = pygame.image.load("Game Developement/graphics/player.png").convert_alpha()
 player_rect = player.get_rect(midbottom=(400, 550))
-enemy = pygame.image.load("PYGAME/graphics/enemy.png").convert_alpha()
+enemy = pygame.image.load("Game Developement/graphics/enemy.png").convert_alpha()
 
 
 # Bullet system
@@ -62,11 +62,11 @@ def collison():
     for bullet in bullets:
         for enemy in A.enemies:
             if bullet.colliderect(enemy):
-                shoot_sound.play()
+                # shoot_sound.play()
                 A.enemies.remove(enemy)
                 
 def gameover():
-    font = pygame.font.Font("PYGAME\graphics\Digitag.ttf",50)
+    font = pygame.font.Font("Game Developement\graphics\Digitag.ttf",50)
     text_score = font.render(f"Score : {A.counts}",True,"red")
     key_text = font.render(f"Press Enter to Start Again",True,50)
     screen.blit(key_text,(600,125))
@@ -135,3 +135,5 @@ while running:
 
     pygame.display.update()
     clock.tick(60)
+
+pygame.quit()
