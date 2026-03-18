@@ -3,9 +3,10 @@
 
 > **Never think in code first. Think in real life first!**
 
-Good programmers imagine the problem like it's happening in the real world, THEN translate it to code.
+Good programmers imagine the problem like it's happening in the real world,
+THEN translate it to code.
 
----
+
 
 ## How I Think — Step by Step 🪜
 

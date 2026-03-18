@@ -1,3 +1,5 @@
+# Permanent Memory 
+
 import json
 from mistralai.client import Mistral
 from dotenv import load_dotenv
@@ -7,6 +9,13 @@ load_dotenv()
 
 file = "Agentic Coding/memory.json"
 client = Mistral(api_key=os.getenv("MISTRAL_API_KEY"))
+
+
+# Handle if file Not found
+if not os.path.exists(file):
+    # print("File Not found")
+    with open("Agentic Coding/memory.json","w") as f:
+        f.write(" ") # No content we need just need file to create
 
 def load_memory():
     try:

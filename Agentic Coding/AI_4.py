@@ -1,3 +1,5 @@
+# Simple tool call 2
+
 import mistralai.client
 import json
 import os

@@ -1,9 +1,11 @@
+# AI Agent hardcoded
+
 from mistralai.client import Mistral
 from dotenv import load_dotenv
 import os
 import json
 
-from tools import (
+from AI_Tools import (
     get_current_directory,
     list_files_dirs,
     read_file,

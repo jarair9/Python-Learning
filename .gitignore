@@ -1,7 +1,7 @@
 # Enviroments
 /.venv
 /__pycache__
-
+__pycache__/
 # files
 .env
 script.txt

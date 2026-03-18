@@ -41,9 +41,9 @@ pygame.display.set_caption("Space Shooter")
 clock = pygame.time.Clock()
 
 
-player = pygame.image.load("Game Developement/graphics/player.png").convert_alpha()
+player = pygame.image.load("Game Developement/assets/player.png").convert_alpha()
 player_rect = player.get_rect(midbottom=(400, 550))
-enemy = pygame.image.load("Game Developement/graphics/enemy.png").convert_alpha()
+enemy = pygame.image.load("Game Developement/assets/enemy.png").convert_alpha()
 
 
 # Bullet system
@@ -66,7 +66,7 @@ def collison():
                 A.enemies.remove(enemy)
                 
 def gameover():
-    font = pygame.font.Font("Game Developement\graphics\Digitag.ttf",50)
+    font = pygame.font.Font("Game Developement\assets\Digitag.ttf",50)
     text_score = font.render(f"Score : {A.counts}",True,"red")
     key_text = font.render(f"Press Enter to Start Again",True,50)
     screen.blit(key_text,(600,125))

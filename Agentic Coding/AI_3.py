@@ -1,3 +1,6 @@
+# Simple Tool call
+
+
 from mistralai.client import Mistral
 import os
 import json

@@ -28,12 +28,12 @@ class Blocks:
 class BallANDPADDLE:
     def __init__(self):
         self.ball_radius = 10
-        self.w = 90
+        self.w = 100
         self.h = 20
         self.peddle_rect = pygame.Rect(300, 470, self.w, self.h)
         self.ball_rect = pygame.Rect(300, 300, self.ball_radius * 2, self.ball_radius * 2)
-        self.velocity_x = 3   # ✅ give starting sideways speed
-        self.velocity_y = -5  # ✅ negative means going UP at start
+        self.velocity_x = 3   
+        self.velocity_y = -5  
 
     def ball(self, blocks):
         self.gravity = 0.2
@@ -41,15 +41,15 @@ class BallANDPADDLE:
         self.ball_rect.y += self.velocity_y
         self.ball_rect.x += self.velocity_x
 
-        # ✅ gravity only on Y, not X!
+        
         self.velocity_y += self.gravity
 
-        # ✅ safe block removal - collect first, remove after
+        
         blocks_to_remove = []
         for rect in blocks:
             if self.ball_rect.colliderect(rect):
                 blocks_to_remove.append(rect)
-                self.velocity_y *= -1  # bounce off block
+                self.velocity_y *= -1  
 
         for rect in blocks_to_remove:
             blocks.remove(rect)
@@ -100,9 +100,9 @@ while running:
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        m.peddle_rect.x -= 10
+        m.peddle_rect.x -= 7
     if keys[pygame.K_RIGHT]:
-        m.peddle_rect.x += 10
+        m.peddle_rect.x += 7
 
     if m.peddle_rect.left < 0:
         m.peddle_rect.left = 0
@@ -111,7 +111,7 @@ while running:
 
     screen.fill("Black")
     b.update()
-    m.ball(b.blocks)  # ✅ passing blocks as argument instead of using global b
+    m.ball(b.blocks)  
     m.peddle()
 
     pygame.display.flip()

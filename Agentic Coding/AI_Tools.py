@@ -1,10 +1,12 @@
+# Tools for AI Agent
+
 import os
 import shutil
 from pathlib import Path
 import requests
 
 def get_current_directory():
-    return str(Path.cwd())  # ✅ return string not Path object
+    return str(Path.cwd())  
 
 
 def list_files_dirs(path="."):
@@ -21,7 +23,7 @@ def list_files_dirs(path="."):
         elif os.path.isfile(full_path):
             result.append(f"📄 File: {item}")
     
-    return "\n".join(result)  # ✅ return string instead of just printing
+    return "\n".join(result)  #  return string instead of just printing
 
 
 def read_file(file):
@@ -36,7 +38,7 @@ def write_file(file, content):
     try:
         with open(file, encoding="utf-8", mode="w") as f:
             f.write(content)
-        return f"✅ Written to '{file}' successfully"  # ✅ return status
+        return f" Written to '{file}' successfully"  
     except FileNotFoundError:
         return f"❌ File '{file}' not found"
 
@@ -45,7 +47,7 @@ def create_write_file(file, content=""):
     try:
         with open(file, encoding="utf-8", mode="w") as f:
             f.write(content)
-        return f"✅ File '{file}' created successfully"  # ✅ return status
+        return f" File '{file}' created successfully"  #  return status
     except Exception as e:
         return f"❌ Error: {e}"
 
@@ -53,14 +55,14 @@ def create_write_file(file, content=""):
 def delete_file(filename):
     if os.path.exists(filename):
         os.remove(filename)
-        return f"✅ File '{filename}' deleted"  # ✅ return status
+        return f" File '{filename}' deleted"  #  return status
     return f"❌ File '{filename}' not found"
 
 
 def rename_file(file, filename):
     if os.path.exists(file):
         os.rename(file, filename)
-        return f"✅ Renamed '{file}' to '{filename}'"  # ✅ return status
+        return f" Renamed '{file}' to '{filename}'"  #  return status
     return f"❌ File '{file}' not found"
 
 def remove_dir(dirname):
