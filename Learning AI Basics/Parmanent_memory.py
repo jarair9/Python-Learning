@@ -1,4 +1,7 @@
 # Permanent Memory 
+# It is good for Long talk where you need to discuss the topic deeply.
+# It also consume more Tokens due to long discussion that AI need to read.
+# For handling Context we are Going deeper, wait for up coming code examples.
 
 import json
 from mistralai.client import Mistral

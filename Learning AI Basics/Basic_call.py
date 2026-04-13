@@ -10,7 +10,7 @@ def generate_response(text):
     client = openai.OpenAI(api_key=os.getenv("CEREBRAS_API_KEY"),base_url="https://api.cerebras.ai/v1")
 
     response = client.chat.completions.create(
-    model="gpt-oss-120b",
+    model="qwen-3-235b-a22b-instruct-2507",
     messages=[
         {"role": "user", "content": text,}
     ])
@@ -18,12 +18,12 @@ def generate_response(text):
     print(response.choices[0].message.content)
     
 
-
+generate_response("hi")
 def generate_str_response(text):
     client = openai.OpenAI(api_key=os.getenv("CEREBRAS_API_KEY"),base_url="https://api.cerebras.ai/v1")
 
     response = client.chat.completions.create(
-    model="gpt-oss-120b",
+    model="qwen-3-235b-a22b-instruct-2507",
     messages=[
         {"role": "user", "content": text,}
     ],

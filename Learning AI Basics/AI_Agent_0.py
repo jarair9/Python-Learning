@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import os
 import json
 
-from AI_Tools import (
+from AI_Tools1 import (
     get_current_directory,
     list_files_dirs,
     read_file,
@@ -32,6 +32,7 @@ tool_registry = {
     "weather_tool":          weather_tool
 }
 
+# Tool Definitions
 tools = [
     {
         "type": "function",
@@ -158,11 +159,11 @@ tools = [
     }
 ]
 
-
+# Loop Ai Agent
 def runAgent(text):
     messages = [{"role": "user", "content": text}]
 
-    while True:  # ✅ loop so AI can call multiple tools
+    while True:  
         response = client.chat.complete(
             model="mistral-small-2503",
             messages=messages,
@@ -171,17 +172,17 @@ def runAgent(text):
 
         choice = response.choices[0]
 
-        # ✅ AI is done — give final answer
+        
         if choice.finish_reason != "tool_calls":
             print(f"\n🤖 Assistant: {choice.message.content}")
             return
 
-        # ✅ AI wants tools — run them all
+       
         messages.append(choice.message)
 
         for tool_call in choice.message.tool_calls:
             tool_name = tool_call.function.name
-            tool_args = json.loads(tool_call.function.arguments)  # ✅ json.loads not json.load
+            tool_args = json.loads(tool_call.function.arguments)  # json.loads not json.load
 
             print(f"\n🔧 Tool called : {tool_name}")
             print(f"📥 Arguments   : {tool_args}")
@@ -189,7 +190,7 @@ def runAgent(text):
             if tool_name in tool_registry:
                 result = tool_registry[tool_name](**tool_args)
             else:
-                result = f"❌ Unknown tool: {tool_name}"
+                result = f"Unknown tool: {tool_name}"
 
             print(f"📤 Result      : {result}")
 
@@ -198,9 +199,7 @@ def runAgent(text):
                 "tool_call_id": tool_call.id,
                 "content": str(result)
             })
-        # ✅ loop continues — AI reads result and decides what to do next
-
-
+        
 while True:
     user = input("\nYou: ")
     if user.lower() == "quit":

@@ -1,7 +1,6 @@
 requests
 mistralai
 openai
-pygame
 speechrecognition
 edge-tts
 vosk

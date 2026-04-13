@@ -1,6 +1,7 @@
 # Temperary Memory
-
-
+# This is Session whise memory if User termenate the terminal the memory vanished.
+# It is good and simple chat for where you need little talk with AI or Ask Questions.
+# It also consume Little token or context window for AN AI.
 
 
 import openai
@@ -11,7 +12,7 @@ load_dotenv()
 
 client = openai.OpenAI(api_key=os.getenv("CEREBRAS_API_KEY"),base_url="https://api.cerebras.ai/v1")
 
-conversation_list = []  
+conversation_list = [] 
 
 def generate_response(text):
     conversation_list.append({"role": "user", "content": text})
@@ -23,7 +24,10 @@ def generate_response(text):
     except openai.RateLimitError:
         print("Rate limit exceeded — try again later.")
         conversation_list.pop()  
-        return                   
+        return
+    except openai.APIConnectionError:
+        print("Check Your Connection and try again")
+        return               
 
     reply = response.choices[0].message.content
 
