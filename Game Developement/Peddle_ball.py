@@ -1,120 +1,135 @@
 import pygame
+import sys
+
 pygame.init()
+
+# Constants
+SCREEN_WIDTH = 500
+SCREEN_HEIGHT = 500
+FPS = 60
+
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pygame.time.Clock()
+font = pygame.font.Font(None, 40)
 
 class Blocks:
     def __init__(self):
-        self.W = 70
-        self.H = 30
-        self.gap = 2
-        self.rows = 7
+        self.W = 55  # Adjusted width to fit the screen better
+        self.H = 20
+        self.gap = 5
+        self.rows = 5
         self.cols = 8
         self.blocks = []
+        self.reset()
 
+    def reset(self):
+        self.blocks = []
         for r in range(self.rows):
             for c in range(self.cols):
+                # Swapped r and c logic to align correctly
                 block_rect = pygame.Rect(
-                    r * (self.W + self.gap),
-                    c * (self.H + self.gap),
+                    c * (self.W + self.gap) + 10, 
+                    r * (self.H + self.gap) + 50,
                     self.W,
                     self.H
                 )
                 self.blocks.append(block_rect)
 
-    def update(self):
-        for rects in self.blocks:
-            pygame.draw.rect(screen, "red", rects)
-
+    def draw(self, surface):
+        for rect in self.blocks:
+            pygame.draw.rect(surface, "red", rect)
 
 class BallANDPADDLE:
     def __init__(self):
         self.ball_radius = 10
         self.w = 100
-        self.h = 20
-        self.peddle_rect = pygame.Rect(300, 470, self.w, self.h)
-        self.ball_rect = pygame.Rect(300, 300, self.ball_radius * 2, self.ball_radius * 2)
-        self.velocity_x = 3   
-        self.velocity_y = -5  
+        self.h = 15
+        self.reset()
 
-    def ball(self, blocks):
-        self.gravity = 0.2
+    def reset(self):
+        self.paddle_rect = pygame.Rect(SCREEN_WIDTH//2 - self.w//2, 470, self.w, self.h)
+        self.ball_rect = pygame.Rect(SCREEN_WIDTH//2, 300, self.ball_radius * 2, self.ball_radius * 2)
+        self.velocity_x = 4
+        self.velocity_y = -4
 
-        self.ball_rect.y += self.velocity_y
+    def update_ball(self, blocks):
         self.ball_rect.x += self.velocity_x
+        self.ball_rect.y += self.velocity_y
 
-        
-        self.velocity_y += self.gravity
-
-        
-        blocks_to_remove = []
-        for rect in blocks:
+        # Block Collision
+        for rect in blocks[:]: # Iterate over a copy to safely remove
             if self.ball_rect.colliderect(rect):
-                blocks_to_remove.append(rect)
-                self.velocity_y *= -1  
+                self.velocity_y *= -1
+                blocks.remove(rect)
+                break # Collision with one block per frame prevents "phasing"
 
-        for rect in blocks_to_remove:
-            blocks.remove(rect)
+    def draw(self, surface):
+        pygame.draw.circle(surface, "white", self.ball_rect.center, self.ball_radius)
+        pygame.draw.rect(surface, "blue", self.paddle_rect)
 
-        pygame.draw.circle(screen, "white", self.ball_rect.center, self.ball_radius)
+def show_restart_screen():
+    screen.fill((33, 33, 33))
+    text = font.render("GAME OVER", True, "white")
+    subtext = font.render("Press R to Restart or Q to Quit", True, "gray")
+    screen.blit(text, (SCREEN_WIDTH // 2 - 80, 200))
+    screen.blit(subtext, (SCREEN_WIDTH // 2 - 180, 250))
+    pygame.display.flip()
 
-    def peddle(self):
-        pygame.draw.rect(screen, "blue", self.peddle_rect)
-
-
-screen = pygame.display.set_mode((500, 500))
-clock = pygame.time.Clock()
-
-running = True
+# Game Objects
 b = Blocks()
 m = BallANDPADDLE()
+game_active = True
 
-while running:
+# Main Loop
+while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
             pygame.quit()
+            sys.exit()
+        
+        if not game_active:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    b.reset()
+                    m.reset()
+                    game_active = True
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    sys.exit()
 
-    # Paddle collision
-    if m.ball_rect.colliderect(m.peddle_rect):
-        m.velocity_y *= -1
-        m.ball_rect.bottom = m.peddle_rect.top  # ✅ push ball above paddle
+    if game_active:
+        # Movement
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] and m.paddle_rect.left > 0:
+            m.paddle_rect.x -= 7
+        if keys[pygame.K_RIGHT] and m.paddle_rect.right < SCREEN_WIDTH:
+            m.paddle_rect.x += 7
 
-    # Top wall
-    if m.ball_rect.top <= 0:
-        m.velocity_y *= -1
-        m.ball_rect.top = 0
+        # Ball Logic
+        m.update_ball(b.blocks)
 
-    # Left wall
-    if m.ball_rect.left <= 0:
-        m.velocity_x *= -1
-        m.ball_rect.left = 0
+        # Wall Collisions
+        if m.ball_rect.left <= 0 or m.ball_rect.right >= SCREEN_WIDTH:
+            m.velocity_x *= -1
+        if m.ball_rect.top <= 0:
+            m.velocity_y *= -1
 
-    # Right wall
-    if m.ball_rect.right >= 500:
-        m.velocity_x *= -1
-        m.ball_rect.right = 500
+        # Paddle Collision
+        if m.ball_rect.colliderect(m.paddle_rect):
+            if m.velocity_y > 0: # Only bounce if falling down
+                m.velocity_y *= -1
+                m.ball_rect.bottom = m.paddle_rect.top
 
-    # Game over
-    if m.ball_rect.bottom > 500:
-        running = False
-        pygame.quit()
+        # Floor (Lose condition)
+        if m.ball_rect.bottom > SCREEN_HEIGHT:
+            game_active = False
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:
-        m.peddle_rect.x -= 7
-    if keys[pygame.K_RIGHT]:
-        m.peddle_rect.x += 7
+        # Rendering
+        screen.fill("black")
+        b.draw(screen)
+        m.draw(screen)
+        pygame.display.flip()
+    else:
+        show_restart_screen()
 
-    if m.peddle_rect.left < 0:
-        m.peddle_rect.left = 0
-    if m.peddle_rect.right > 500:
-        m.peddle_rect.right = 500
-
-    screen.fill("Black")
-    b.update()
-    m.ball(b.blocks)  
-    m.peddle()
-
-    pygame.display.flip()
-    clock.tick(60)
-
-pygame.quit()
+    clock.tick(FPS)
